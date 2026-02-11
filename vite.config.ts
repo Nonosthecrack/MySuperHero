@@ -9,6 +9,7 @@ export default ({ mode }: { mode: string }) => {
 
   return defineConfig({
     plugins: [vue()],
+    base: '/MySuperHero/',
     server: {
       port: 3000,
       open: true,
