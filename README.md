@@ -1,4 +1,4 @@
-# My SUper Hero
+# My Super Hero
 
 Application Vue 3 + TypeScript + Vite pour rechercher et afficher des fiches de super-héros.
 
@@ -25,14 +25,6 @@ npm install
 # ou
 yarn install
 ```
-
-3. Créer un fichier `.env` à la racine et y mettre votre clé API:
-
-```
-VITE_SUPERHERO_API_KEY=your_api_key_here
-```
-
-Remarque importante: `VITE_` est nécessaire pour que Vite expose la variable au code client (elle sera incluse dans le bundle). Pour ne pas exposer la clé en production, utilisez un proxy serveur côté backend.
 
 ## Scripts utiles
 - Démarrer le serveur de développement:
@@ -94,8 +86,3 @@ app.listen(process.env.PORT || 3000)
 - Si `npm run build` échoue pour des raisons TypeScript, exécutez `npm run build` localement pour lire les erreurs: la commande exécute `vue-tsc` avant la build Vite.
 - Vérifiez que `VITE_SUPERHERO_API_KEY` est défini dans `.env` lors du dev.
 
-## Contributions
-- Suggestions et PRs sont bienvenues. Ouvrez une issue si vous rencontrez un bug.
-
-## Licence
-- Projet fourni tel quel.
