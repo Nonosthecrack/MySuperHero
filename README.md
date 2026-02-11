@@ -1,4 +1,4 @@
-# My SUper Hero
+# My Super Hero
 
 Application Vue 3 + TypeScript + Vite pour rechercher et afficher des fiches de super-héros.
 
