@@ -1,42 +1,101 @@
-# MySuperHero
+# My SUper Hero
 
-This template should help get you started developing with Vue 3 in Vite.
+Application Vue 3 + TypeScript + Vite pour rechercher et afficher des fiches de super-héros.
 
-## Recommended IDE Setup
+## Aperçu
+- Interface simple et sombre pour chercher des super-héros via l'API SuperHero (https://superheroapi.com).
+- La clé API est fournie via une variable d'environnement `VITE_SUPERHERO_API_KEY` (voir ci-dessous).
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Prérequis
+- Node.js (LTS recommandé, ex. 18.x ou 20.x)
+- npm ou yarn
 
-## Recommended Browser Setup
+## Installation
+1. Cloner le dépôt:
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```bash
+git clone <repo-url> MySuperHero
+cd MySuperHero
 ```
 
-### Compile and Hot-Reload for Development
+2. Installer les dépendances:
 
-```sh
+```bash
+npm install
+# ou
+yarn install
+```
+
+3. Créer un fichier `.env` à la racine et y mettre votre clé API:
+
+```
+VITE_SUPERHERO_API_KEY=your_api_key_here
+```
+
+Remarque importante: `VITE_` est nécessaire pour que Vite expose la variable au code client (elle sera incluse dans le bundle). Pour ne pas exposer la clé en production, utilisez un proxy serveur côté backend.
+
+## Scripts utiles
+- Démarrer le serveur de développement:
+
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+- Compiler pour la production:
 
-```sh
+```bash
 npm run build
 ```
+
+- Servir la build en local pour vérification (preview):
+
+```bash
+npm run preview
+```
+
+## Configuration de développement (CORS)
+Pendant le développement, Vite est configuré pour rediriger les appels vers `/api/superhero/*` vers `https://superheroapi.com/api/<TOKEN>/...` en injectant la clé depuis `VITE_SUPERHERO_API_KEY` (voir `vite.config.ts`). Cela évite les erreurs CORS lors des tests locaux.
+
+## Utilisation
+1. Lancer `npm run dev` et ouvrir http://localhost:3000 (ou l'URL indiquée par Vite).
+2. Saisir un nom dans la barre de recherche pour obtenir une liste de correspondances.
+3. Cliquer sur un héros pour voir ses détails (biographie, caractéristiques, connexions, etc.).
+
+## Notes de sécurité / déploiement
+- Ne commitez jamais de clé API dans le dépôt.
+- En production, ne placez pas la clé API dans le bundle client — mettez en place un petit proxy serveur (Express, serverless function, etc.) qui lit la clé depuis une variable d'environnement serveur (ex: `SUPERHERO_API_KEY`) et relaie les requêtes vers `https://superheroapi.com/api/<TOKEN>/...`.
+
+Exemple minimal (Express):
+
+```js
+// server/index.js
+import express from 'express'
+import fetch from 'node-fetch'
+
+const app = express()
+const TOKEN = process.env.SUPERHERO_API_KEY
+
+app.use('/api/superhero/*', async (req, res) => {
+	const upstream = `https://superheroapi.com/api/${TOKEN}/${req.params[0]}`
+	const r = await fetch(upstream)
+	const json = await r.json()
+	res.json(json)
+})
+
+app.listen(process.env.PORT || 3000)
+```
+
+## Fichiers clés
+- `src/services/superhero.service.ts` : appels réseau (utilise des routes relatives `/api/superhero/...`).
+- `vite.config.ts` : proxy dev et chargement des variables `VITE_`.
+- `src/style.css`, `src/components/` : styles et composants UI.
+
+## Débogage
+- Si `npm run build` échoue pour des raisons TypeScript, exécutez `npm run build` localement pour lire les erreurs: la commande exécute `vue-tsc` avant la build Vite.
+- Vérifiez que `VITE_SUPERHERO_API_KEY` est défini dans `.env` lors du dev.
+
+## Contributions
+- Suggestions et PRs sont bienvenues. Ouvrez une issue si vous rencontrez un bug.
+
+## Licence
+- Projet fourni tel quel.
